@@ -49,29 +49,32 @@ SELECT DISTINCT
 FROM
     customer AS cust
 WHERE
-    customer_id IN (
-		SELECT 
+    customer_id IN (SELECT 
             customer_id
         FROM
-            inventory i
+            rental r
         WHERE
-            film_id IN (
-				SELECT 
-                    film_id
+            inventory_id IN (SELECT 
+                    inventory_id
                 FROM
-                    film_category
+                    inventory i
                 WHERE
-                    category_id = (
-						SELECT 
-                            category_id
+                    film_id IN (SELECT 
+                            film_id
                         FROM
-                            category
+                            film_category
                         WHERE
-                            name = 'Action')))
+                            category_id = (SELECT 
+                                    category_id
+                                FROM
+                                    category
+                                WHERE
+                                    name = 'Action'))))
 ;
 
+
 ## Verify if the above two queries produce the same results or not
--- Both do NOT produce the same results. The join method returned 510 rows while the WHERE, IN method returned 599 rows.
+-- Both have the same results.
 
 
 # Use the case statement to create a new column classifying existing columns as either low, medium or high value transactions based on the amount of payment. 
